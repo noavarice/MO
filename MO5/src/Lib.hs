@@ -2,8 +2,13 @@ module Lib
     ( someFunc
     ) where
 
+import Text.Printf
+
 someFunc :: IO ()
-someFunc = print $ fst $ fastestDescent (1.0, -3.0) 0.001 100
+someFunc =
+        printf "%f, %f\n" (fst point) (snd point)
+        where
+            point = fastestDescent (1.0, -3.0) 0.001 100
 
 f x y = x ^ 2 + y ^ 2 - 4
 
