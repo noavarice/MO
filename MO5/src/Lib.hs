@@ -2,13 +2,16 @@ module Lib
     ( someFunc
     ) where
 
+import Data.Bool
 import Text.Printf
 
 someFunc :: IO ()
-someFunc =
-        printf "%f, %f\n" (fst point) (snd point)
+someFunc
+        | snd result    = printf "Минимум найден в точке (%f, %f)\n" (fst point) (snd point)
+        | otherwise     = printf "Минимум не найден, последняя найденная точка: (%f, %f)\n" (fst point) (snd point)
         where
-            point = fastestDescent (103.0, 34.0) 0.000001 10000
+            result  = fastestDescent (103.0, 34.0) 0.000001 10000
+            point   = fst result
 
 f x y = (x - 4) ^ 2 + (y + 7) ^ 2 - 4
 
@@ -22,10 +25,10 @@ measure (x1, y1) (x2, y2) = sqrt $ (x1 - x2) ^ 2 + (y1 - y2) ^ 2
 
 step = 0.001
 
-fastestDescent :: (Double, Double) -> Double -> Integer -> (Double, Double)
+fastestDescent :: (Double, Double) -> Double -> Integer -> ((Double, Double), Bool)
 fastestDescent startPoint eps iterCount
-        | iterCount == 0                        = startPoint
-        | measure startPoint nextPoint < eps    = nextPoint
+        | iterCount == 0                        = (startPoint, False)
+        | measure startPoint nextPoint < eps    = (nextPoint, True)
         | otherwise                             = fastestDescent nextPoint eps (iterCount - 1)
         where
             x = fst startPoint
