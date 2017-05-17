@@ -7,8 +7,8 @@ import Text.Printf
 
 someFunc :: IO ()
 someFunc
-        | snd result    = printf "Минимум найден в точке (%f, %f)\n" (fst point) (snd point)
-        | otherwise     = printf "Минимум не найден, последняя найденная точка: (%f, %f)\n" (fst point) (snd point)
+        | snd result    = printf "Минимум найден в точке (%.4f, %.4f)\n" (fst point) (snd point)
+        | otherwise     = printf "Минимум не найден, последняя найденная точка: (%.4f, %.4f)\n" (fst point) (snd point)
         where
             result  = fastestDescent (103.0, 34.0) 0.000001 10000
             point   = fst result
