@@ -12,7 +12,7 @@ someFunc
         | snd result    = printf "Минимум найден в точке (%.4f, %.4f)\n" x y
         | otherwise     = printf "Минимум не найден, последняя найденная точка: (%.4f, %.4f)\n" x y
         where
-            result  = fastestDescent (103.0, 34.0) 0.000001 10000 0.01
+            result  = fastestDescent (103.0, 34.0) 0.000001 10000 1
             (x, y) = fst result
 
 f (x, y) = (x - 4) ^ 2 + (y + 7) ^ 2 - 4
@@ -28,13 +28,14 @@ measure (x1, y1) (x2, y2) = sqrt $ (x1 - x2) ^ 2 + (y1 - y2) ^ 2
 stepMultilplicator = 0.5;
 
 getNextPointAndStep currentPoint currentStep
-        | (f nextPoint) <= (f currentPoint) = (nextPoint, nextStep)
-        | otherwise                         = getNextPointAndStep currentPoint nextStep
+        | (f nextPoint) <= (f currentPoint) - nextStep * gradientLength ^ 2 = (nextPoint, nextStep)
+        | otherwise                                                         = getNextPointAndStep currentPoint nextStep
         where
             x = fst currentPoint 
             y = snd currentPoint
-            gradientValue = gradient (x, y)
-            nextPoint = (x - currentStep * fst gradientValue, y - currentStep * snd gradientValue)
+            (gradX, gradY) = gradient currentPoint
+            gradientLength = measure (0, 0) (gradX, gradY)
+            nextPoint = (x - currentStep * gradX, y - currentStep * gradY)
             nextStep = currentStep * stepMultilplicator 
 
 fastestDescent :: Point -> Double -> Integer -> Double -> (Point, Bool)
